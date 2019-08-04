@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Superclass;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ORM\MappedSuperclass
  */
-class UbicacionAbstract {
+abstract class UbicacionAbstract {
     
     /**
      * @ORM\Column(type="string", length=255)
@@ -23,6 +23,11 @@ class UbicacionAbstract {
      * @ORM\Column(type="string", length=255)
      */
     protected $region;
+    
+    /**
+     * @ORM\Column(type="string", length=10)
+     */
+    protected $tipo;
     
     function getDireccion() {
         return $this->direccion;
@@ -50,6 +55,16 @@ class UbicacionAbstract {
         $this->region = $region;
         return $this;
     }
+
+    public function getTipo() {
+        return $this->tipo;
+    }
+
+    public function setTipo($tipo) {
+        $this->tipo = $tipo;
+        return $this;
+    }
+
 
 
     

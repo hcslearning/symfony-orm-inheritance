@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\UbicacionAbstract;
+use App\Entity\Superclass\UbicacionAbstract;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DespachoRepository")

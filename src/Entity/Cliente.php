@@ -48,7 +48,7 @@ class Cliente implements UserInterface {
     private $pedidos;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Direccion", mappedBy="cliente")
+     * @ORM\OneToMany(targetEntity="App\Entity\DireccionCliente", mappedBy="cliente", orphanRemoval=true)
      */
     private $direcciones;
 
@@ -161,14 +161,25 @@ class Cliente implements UserInterface {
         return $this;
     }
 
+    public function getContactInfo(): ContactInfo {
+        return $this->contactInfo;
+    }
+
+    public function setContactInfo(ContactInfo $contactInfo) {
+        $this->contactInfo = $contactInfo;
+        return $this;
+    }
+
     /**
-     * @return Collection|Direccion[]
+     * @return Collection|DireccionCliente[]
      */
-    public function getDirecciones(): Collection {
+    public function getDirecciones(): Collection
+    {
         return $this->direcciones;
     }
 
-    public function addDireccione(Direccion $direccione): self {
+    public function addDireccione(DireccionCliente $direccione): self
+    {
         if (!$this->direcciones->contains($direccione)) {
             $this->direcciones[] = $direccione;
             $direccione->setCliente($this);
@@ -177,7 +188,8 @@ class Cliente implements UserInterface {
         return $this;
     }
 
-    public function removeDireccione(Direccion $direccione): self {
+    public function removeDireccione(DireccionCliente $direccione): self
+    {
         if ($this->direcciones->contains($direccione)) {
             $this->direcciones->removeElement($direccione);
             // set the owning side to null (unless already changed)
@@ -188,16 +200,5 @@ class Cliente implements UserInterface {
 
         return $this;
     }
-    
-    public function getContactInfo(): ContactInfo {
-        return $this->contactInfo;
-    }
-
-    public function setContactInfo(ContactInfo $contactInfo) {
-        $this->contactInfo = $contactInfo;
-        return $this;
-    }
-
-
 
 }

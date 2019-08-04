@@ -3,8 +3,10 @@
 namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use App\Entity\Cliente;
 use Doctrine\ORM\EntityManager;
+use App\Entity\Cliente;
+use App\Entity\Empresa;
+use App\Entity\DireccionEmpresa;
 
 class EmbeddedMagicTest extends KernelTestCase {
 
@@ -21,7 +23,8 @@ class EmbeddedMagicTest extends KernelTestCase {
                 ->get('doctrine')
                 ->getManager()
         ;
-        $this->em->createQuery('DELETE App\Entity\Cliente c')->execute();
+        $this->em->createQuery('DELETE App\Entity\Cliente')->execute();
+        $this->em->createQuery('DELETE App\Entity\Empresa')->execute();
     }
 
     protected function tearDown(): void {
@@ -43,6 +46,27 @@ class EmbeddedMagicTest extends KernelTestCase {
         ;
         $this->em->persist($cliente);
         $this->em->flush();
+    }
+
+    public function testInheritance() {
+        $empresa = (new Empresa())
+                ->setAlias("jumbo")
+                ->setRazonSocial("CENCOSUD S.A.")
+                ->setDireccion(
+                    (new DireccionEmpresa())
+                        ->setComuna('Las Condes')
+                        ->setDireccion("Manquehue Norte 122")
+                        ->setRegion("RM")
+                        ->setTipo("OFICINA")
+                )
+        ;
+        $this->em->persist($empresa);
+        $this->em->flush();
+        
+        $repository = $this->em->getRepository(Empresa::class);
+        $cencosud = $repository->findOneBy(['alias' => 'jumbo']);
+        $this->assertNotNull($cencosud);
+        print_r($cencosud);
     }
 
 }

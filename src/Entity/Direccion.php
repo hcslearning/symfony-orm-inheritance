@@ -7,6 +7,7 @@ use App\Entity\Superclass\UbicacionAbstract;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DireccionRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
  */
 class Direccion extends UbicacionAbstract
 {
@@ -17,25 +18,9 @@ class Direccion extends UbicacionAbstract
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cliente", inversedBy="direcciones")
-     */
-    private $cliente;
-
     public function getId(): ?int
     {
         return $this->id;
     }
-
-    public function getCliente(): ?Cliente
-    {
-        return $this->cliente;
-    }
-
-    public function setCliente(?Cliente $cliente): self
-    {
-        $this->cliente = $cliente;
-
-        return $this;
-    }
+    
 }

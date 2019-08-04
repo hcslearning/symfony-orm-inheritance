@@ -26,6 +26,11 @@ class Empresa
      */
     private $alias;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\DireccionEmpresa", inversedBy="empresa", cascade={"persist", "remove"})
+     */
+    private $direccion;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +57,19 @@ class Empresa
     {
         $this->alias = $alias;
 
+        return $this;
+    }
+
+    public function getDireccion(): ?DireccionEmpresa
+    {
+        return $this->direccion;
+    }
+
+    public function setDireccion(?DireccionEmpresa $direccion): self
+    {
+        $this->direccion = $direccion;
+        $direccion->setEmpresa($this);
+        
         return $this;
     }
 }

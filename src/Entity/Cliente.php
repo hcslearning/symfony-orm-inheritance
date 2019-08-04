@@ -6,18 +6,25 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\Embeddable\ContactInfo;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ClienteRepository")
  */
-class Cliente implements UserInterface
-{
+class Cliente implements UserInterface {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @ORM\Embedded(class="\App\Entity\Embeddable\ContactInfo", columnPrefix=false)
+     * @var ContactInfo
+     */
+    private $contactInfo;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -45,24 +52,28 @@ class Cliente implements UserInterface
      */
     private $direcciones;
 
-    public function __construct()
-    {
+    public function __construct() {
+        $this->contactInfo = new ContactInfo();
         $this->pedidos = new ArrayCollection();
         $this->direcciones = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
+    public function __call($name, $arguments) {
+        return call_user_func_array(
+                [$this->contactInfo, $name],
+                $arguments
+        );
+    }
+
+    public function getId(): ?int {
         return $this->id;
     }
 
-    public function getEmail(): ?string
-    {
+    public function getEmail(): ?string {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
-    {
+    public function setEmail(string $email): self {
         $this->email = $email;
 
         return $this;
@@ -73,16 +84,14 @@ class Cliente implements UserInterface
      *
      * @see UserInterface
      */
-    public function getUsername(): string
-    {
+    public function getUsername(): string {
         return (string) $this->email;
     }
 
     /**
      * @see UserInterface
      */
-    public function getRoles(): array
-    {
+    public function getRoles(): array {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
@@ -90,8 +99,7 @@ class Cliente implements UserInterface
         return array_unique($roles);
     }
 
-    public function setRoles(array $roles): self
-    {
+    public function setRoles(array $roles): self {
         $this->roles = $roles;
 
         return $this;
@@ -100,13 +108,11 @@ class Cliente implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword(): string
-    {
+    public function getPassword(): string {
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
-    {
+    public function setPassword(string $password): self {
         $this->password = $password;
 
         return $this;
@@ -115,16 +121,14 @@ class Cliente implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getSalt()
-    {
+    public function getSalt() {
         // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
-    {
+    public function eraseCredentials() {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
@@ -132,13 +136,11 @@ class Cliente implements UserInterface
     /**
      * @return Collection|Pedido[]
      */
-    public function getPedidos(): Collection
-    {
+    public function getPedidos(): Collection {
         return $this->pedidos;
     }
 
-    public function addPedido(Pedido $pedido): self
-    {
+    public function addPedido(Pedido $pedido): self {
         if (!$this->pedidos->contains($pedido)) {
             $this->pedidos[] = $pedido;
             $pedido->setCliente($this);
@@ -147,8 +149,7 @@ class Cliente implements UserInterface
         return $this;
     }
 
-    public function removePedido(Pedido $pedido): self
-    {
+    public function removePedido(Pedido $pedido): self {
         if ($this->pedidos->contains($pedido)) {
             $this->pedidos->removeElement($pedido);
             // set the owning side to null (unless already changed)
@@ -163,13 +164,11 @@ class Cliente implements UserInterface
     /**
      * @return Collection|Direccion[]
      */
-    public function getDirecciones(): Collection
-    {
+    public function getDirecciones(): Collection {
         return $this->direcciones;
     }
 
-    public function addDireccione(Direccion $direccione): self
-    {
+    public function addDireccione(Direccion $direccione): self {
         if (!$this->direcciones->contains($direccione)) {
             $this->direcciones[] = $direccione;
             $direccione->setCliente($this);
@@ -178,8 +177,7 @@ class Cliente implements UserInterface
         return $this;
     }
 
-    public function removeDireccione(Direccion $direccione): self
-    {
+    public function removeDireccione(Direccion $direccione): self {
         if ($this->direcciones->contains($direccione)) {
             $this->direcciones->removeElement($direccione);
             // set the owning side to null (unless already changed)
@@ -190,4 +188,16 @@ class Cliente implements UserInterface
 
         return $this;
     }
+    
+    public function getContactInfo(): ContactInfo {
+        return $this->contactInfo;
+    }
+
+    public function setContactInfo(ContactInfo $contactInfo) {
+        $this->contactInfo = $contactInfo;
+        return $this;
+    }
+
+
+
 }

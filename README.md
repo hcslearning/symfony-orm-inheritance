@@ -7,6 +7,7 @@ Aprendiendo sobre herencia en Doctrine.
 3. La clase puede estar un Namespace distinto al de Entity
 4. Las clases Embeddables también sirven para evitar duplicacion
 5. Se puede usar el método mágico __call() para facilitar las llamadas a la clase embebida
+6. Las clases Embeddables no soportan relaciones, solo campos simples (int, string, etc) que sean serializables
 
 ## Requerimientos
 1. Un cliente puede tener registradas muchas direcciones (direccion, numero, comuna)

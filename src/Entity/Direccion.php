@@ -7,7 +7,7 @@ use App\Entity\Superclass\UbicacionAbstract;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DireccionRepository")
- * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\InheritanceType("JOINED")
  */
 class Direccion extends UbicacionAbstract
 {
